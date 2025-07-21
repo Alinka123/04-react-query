@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MovieModal from "../MovieModal/MovieModal";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Toaster, toast } from "react-hot-toast";
@@ -34,6 +34,11 @@ export default function App() {
     setIsModalOpen(false);
     setSelectedMovie(null);
   };
+  useEffect(() => {
+    if (isSuccess && data?.results.length === 0) {
+      toast.error("No movies found.");
+    }
+  }, [isSuccess, data]);
   const totalPages = data?.total_pages ?? 0;
   return (
     <>
@@ -49,9 +54,6 @@ export default function App() {
       )}
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
-      {isSuccess &&
-        data.results.length === 0 &&
-        toast.error("No movies found.")}
 
       {isSuccess && data.results.length > 0 && (
         <>
